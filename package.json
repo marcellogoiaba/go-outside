@@ -1,0 +1,29 @@
+{
+  "name": "go-outside",
+  "version": "1.0.0",
+  "description": "A social networking web application for outdoorzy people built using MEAN technologies.  ",
+  "main": "app.js",
+  "scripts": {
+    "test": "M"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marcellogoiaba/go-outside.git"
+  },
+  "keywords": [
+    "MongoDB",
+    "Express",
+    "Angular",
+    "2",
+    "NodeJS",
+    "Mongoose",
+    "Cors",
+    "Authentication"
+  ],
+  "author": "Marcelo Silva",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/marcellogoiaba/go-outside/issues"
+  },
+  "homepage": "https://github.com/marcellogoiaba/go-outside#readme"
+}
