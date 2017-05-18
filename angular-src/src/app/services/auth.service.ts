@@ -33,6 +33,10 @@ export class AuthService {
       .map(res => res.json());
   }
 
+  loggedIn(){
+    return tokenNotExpired('id_token');
+  }
+
   storeUserData(token, user){
     localStorage.setItem('id_token', token);
     localStorage.setItem('user', JSON.stringify(user));
