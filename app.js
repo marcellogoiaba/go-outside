@@ -1,19 +1,10 @@
-const config = require('./config/database');
+const config = require('./config/dbConnect.js');
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const passport = require('passport');
-const mongoose = require('mongoose');
 
-//connect to MongoDB
-mongoose.connect(config.database);
-mongoose.connection.on('connected', ()=>{
-  console.log('Connected to db ' + config.database);
-});
-mongoose.connection.on('error', (err)=>{
-  console.log('Connection to db failed, Error '+ err);
-})
 
 //inistilise app with express
 const app = express();
