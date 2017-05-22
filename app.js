@@ -9,7 +9,8 @@ const passport = require('passport');
 //inistilise app with express
 const app = express();
 
-const users = require('./routes/users');
+const users = require('./controllers/users.controller');
+const events = require('./controllers/events.controller');
 
 //variable for port
 const port = 3000;
@@ -30,12 +31,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/users', users);
 
-//index route
-app.get('/',(req, res)=>{
-  res.send('Invalid endpoint');
-});
 
 //start server
-app.listen(port, ()=>{
+app.listen(port, () => {
   console.log('Server started on port ' + port);
 })
