@@ -1,12 +1,9 @@
 const mongoose = require('mongoose');
 const Event = mongoose.model('Event');
-const eventsModel = require('../models/events');
-// const dbconn = require('../../config/dbConnect');
-const eventData = require('../data/event-data');
+const eventsModel = require('../models/events.model');
+const dbconn = require('../config/dbConnect');
 
 module.exports.eventsGetAll = (req, res) => {
-  // let db = dbconn.get();
-  // let connection = db.collection('events');
 
   //slicing the data received from db for pagination
   let offset = 0;
@@ -19,36 +16,30 @@ module.exports.eventsGetAll = (req, res) => {
     count = parseInt(req.query.count, 10);
   }
 
-  let returnData = eventData.slice(offset, offset+count);
-
-  // collection
-  //   .find()
-  //   .skip(offset)
-  //   .limit(count)
-  //   .toArray((err, docs) => {
-  //     console.log("Found events", docs);
-  //     res
-  //      .status(200)
-  //      .json(docs);
-  //   });
-  console.log("GET the events");
-  console.log(req.query);
-  res
-   .status(200)
-   .json(returnData)
+  Event
+   .find()
+   .skip(offset)
+   .limit(count)
+   .exec((err, events) => {
+     console.log("Found events", events.length);
+     res
+     .status(200)
+      .json(events);
+   });
 };
 
 module.exports.eventsGetOne = (req, res) => {
-  // let db = dbconn.get();
-  // let collection = db.collection('events');
 
   let eventId = req.params.eventId;
-  let thisEvent = eventData[eventId];
   console.log("Get eventId", eventId);
-  res
-   .status(200)
-   .json(thisEvent);
 
+  Event
+   .findById(eventId)
+   .exec((err, doc) => {
+     res
+      .status(200)
+      .json(doc);
+   });
 };
 
 module.exports.eventsAddOne = (req, res) => {

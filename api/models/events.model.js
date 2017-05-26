@@ -27,10 +27,6 @@ const eventSchema = new mongoose.Schema({
     required: true
   },
   dateAndTime: Date,
-  location: {
-    type: String,
-    required: true
-  },
   organisers: [String],
   photos: [String],
   location: {

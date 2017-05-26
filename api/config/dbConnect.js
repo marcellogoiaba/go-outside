@@ -34,4 +34,4 @@ process.once('SIGUSR2', () => {
 });
 
 //bring in event Schema
-require('./events.model');
+require('../models/events.model');

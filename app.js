@@ -1,4 +1,4 @@
-const config = require('./config/dbConnect.js');
+const config = require('./api/config/dbConnect.js');
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
@@ -22,7 +22,7 @@ app.use((req, res, next) => {
   next();
 });
 
-require('./config/passport')(passport);
+require('./api/config/passport')(passport);
 
 //static folder
 app.use(express.static(path.join(__dirname, 'public')));
