@@ -4,6 +4,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const passport = require('passport');
+const routes = require('./routes');
 
 
 //inistilise app with express
@@ -14,6 +15,12 @@ const events = require('./controllers/events.controller');
 
 //variable for port
 const port = 3000;
+
+//middleware to log every request
+app.use((req, res, next) => {
+  console.log(req.method, req.url);
+  next();
+});
 
 //Cors middleware
 app.use(cors());
@@ -28,6 +35,8 @@ require('./config/passport')(passport);
 
 //static folder
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/api', routes);
 
 app.use('/users', users);
 
