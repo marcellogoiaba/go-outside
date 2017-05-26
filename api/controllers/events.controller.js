@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Event = mongoose.model('Event');
+const eventsModel = require('../models/events');
 
 module.exports.eventsGetAll = (req, res) => {
   let db = dbconn.get();

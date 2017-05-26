@@ -4,14 +4,14 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const passport = require('passport');
-const routes = require('./routes');
+const routes = require('./api/routes');
 
 
 //inistilise app with express
 const app = express();
 
-const users = require('./controllers/users.controller');
-const events = require('./controllers/events.controller');
+const users = require('./api/controllers/users.controller');
+const events = require('./api/controllers/events.controller');
 
 //variable for port
 const port = 3000;

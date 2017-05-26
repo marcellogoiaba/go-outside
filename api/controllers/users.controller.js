@@ -3,10 +3,10 @@ const router = express.Router();
 const User = require('../models/user');
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
-const config = require('../config/database');
+const config = require('../../config/database');
 
 //Register router
-router.post('/register', (req, res, next)=>{
+router.post('/register', (req, res, next) => {
   let newUser = new User({
     name: req.body.name,
     email: req.body.email,
@@ -60,7 +60,7 @@ router.post('/authenticate', (req, res, next)=>{
 });
 
 //Profile
-router.get('/profile', passport.authenticate('jwt', {session: false}), (req, res, next)=>{
+router.get('/profile', passport.authenticate('jwt', {session: false}), (req, res, next) => {
   res.json({user: req.user} );
 });
 
