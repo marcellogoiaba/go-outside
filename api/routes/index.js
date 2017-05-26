@@ -1,20 +1,18 @@
 const express = require('express');
 const router  = express.Router();
 
-router
- .route('/json')
- .get((req, res) => {
-   console.log("Get the json");
-   res
-    .status(200)
-    .json({"jsonData" : true});
- })
- .post((req, res) => {
-   console.log("POST the json");
-   res
-    .status(200)
-    .json({"jsonData" : "POST received"});
- });
+const ctrlEvents = require('../controllers/events.controller');
 
+router
+ .route('/events')
+ .get(ctrlEvents.eventsGetAll);
+
+ router
+  .route('/events/:eventId')
+  .get(ctrlEvents.eventsGetOne);
+
+  router
+   .route('/events/new')
+   .post(ctrlEvents.eventsAddOne);
 
 module.exports = router;

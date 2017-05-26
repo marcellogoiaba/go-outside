@@ -22,19 +22,21 @@ app.use((req, res, next) => {
   next();
 });
 
-//Cors middleware
-app.use(cors());
-//body-parser middleware
-app.use(bodyParser.json());
-
-//passport middleware
-app.use(passport.initialize());
-app.use(passport.session());
-
 require('./config/passport')(passport);
 
 //static folder
 app.use(express.static(path.join(__dirname, 'public')));
+
+//Cors middleware
+app.use(cors());
+
+//body-parser middleware
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended : false}));
+
+//passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/api', routes);
 
