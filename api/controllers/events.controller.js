@@ -3,17 +3,59 @@ const Event = mongoose.model('Event');
 const eventsModel = require('../models/events.model');
 const dbconn = require('../config/dbConnect');
 
+let runGeoQuery = (req, res) => {
+  let lng = parseInt(req.query.lng);
+  let lat = parseInt(req.query.lat);
+
+  // a GeoJson point
+  let point = {
+    type : "Point",
+    coordinates : [lng, lat]
+  };
+  let geoOptions = {
+    spherical : true,
+    maxDistance : 50000,
+    num : 10
+  };
+
+  Event
+   .geoNear(point, geoOptions, (err, results, stats) => {
+     console.log('Geo results' , results);
+     console.log('Geo stats' , stats);
+     res
+      .status(200)
+      .json(results);
+   });
+};
+
 module.exports.eventsGetAll = (req, res) => {
 
   //slicing the data received from db for pagination
   let offset = 0;
   let count  = 10;
+  let maxCount = 15;
 
+  if(req.query && req.query.lat && req.query.lng){
+    runGeoQuery(req, res);
+    return;
+  }
   if(req.query && req.query.offset){
     offset = parseInt(req.query.offset, 10);
   }
   if(req.query && req.query.count){
     count = parseInt(req.query.count, 10);
+  }
+  if(isNaN(count) || isNaN(offset)){
+    res
+     .status(400)
+     .json({"message" : "count and offset should be numbers"});
+    return;
+  }
+  if(count > maxCount){
+    res
+     .status(400)
+     .json({"message" : "Count exceeds limit of " + maxCount + "!"});
+     return;
   }
 
   Event
@@ -21,10 +63,18 @@ module.exports.eventsGetAll = (req, res) => {
    .skip(offset)
    .limit(count)
    .exec((err, events) => {
-     console.log("Found events", events.length);
-     res
-     .status(200)
-      .json(events);
+     if(err){
+       console.log("Error finding events");
+       res
+        .status(500)
+        .json(err);
+     }
+     else{
+       console.log("Found events", events.length);
+       res
+       .status(200)
+       .json(events);
+     }
    });
 };
 
@@ -36,9 +86,22 @@ module.exports.eventsGetOne = (req, res) => {
   Event
    .findById(eventId)
    .exec((err, doc) => {
+     var response = {
+       status : 200,
+       message : doc
+     };
+     if(err){
+       console.log("Error finding Event");
+       response.status = 500;
+       response.message = err;
+     }
+     else if(!doc){
+       response.status = 404;
+       response.message = {"message" : "Event not found"};
+     }
      res
-      .status(200)
-      .json(doc);
+      .status(response.status)
+      .json(response.message);
    });
 };
 

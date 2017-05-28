@@ -20,7 +20,7 @@ const Event = mongoose.model('Event');
 //get a single review for an event
  module.exports.commentsGetOne = (req, res) => {
    let eventId = req.params.eventId;
-   let commentId = req.params.eventId;
+   let commentId = req.params.commentId;
    console.log("Get commentId " + commentId + " for eventId " + eventId);
 
    Event
