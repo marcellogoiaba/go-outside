@@ -7,19 +7,17 @@ const ctrlComments = require('../controllers/comments.controller');
 //Event routes
 router
  .route('/events')
- .get(ctrlEvents.eventsGetAll);
+ .get(ctrlEvents.eventsGetAll)
+ .post(ctrlEvents.eventsAddOne);
 router
  .route('/events/:eventId')
  .get(ctrlEvents.eventsGetOne);
 
-router
- .route('/events/new')
- .post(ctrlEvents.eventsAddOne);
-
 //Comment routes
 router
  .route('/events/:eventId/comments')
- .get(ctrlComments.commentsGetAll);
+ .get(ctrlComments.commentsGetAll)
+ .post(ctrlComments.commentsAddOne);
 router
  .route('/events/:eventId/comments/:commentId')
  .get(ctrlComments.commentsGetOne);

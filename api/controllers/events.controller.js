@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const Event = mongoose.model('Event');
 const eventsModel = require('../models/events.model');
-const dbconn = require('../config/dbConnect');
 
 let runGeoQuery = (req, res) => {
   let lng = parseInt(req.query.lng);
@@ -22,9 +21,17 @@ let runGeoQuery = (req, res) => {
    .geoNear(point, geoOptions, (err, results, stats) => {
      console.log('Geo results' , results);
      console.log('Geo stats' , stats);
-     res
-      .status(200)
-      .json(results);
+     if(err){
+       console.log(err);
+       res
+        .status(500)
+        .json(err) ;
+     }
+     else{
+       res
+        .status(200)
+        .json(results);
+     }
    });
 };
 
@@ -86,7 +93,7 @@ module.exports.eventsGetOne = (req, res) => {
   Event
    .findById(eventId)
    .exec((err, doc) => {
-     var response = {
+     let response = {
        status : 200,
        message : doc
      };
@@ -96,6 +103,7 @@ module.exports.eventsGetOne = (req, res) => {
        response.message = err;
      }
      else if(!doc){
+       console.log("eventId " + id + " not found in database");
        response.status = 404;
        response.message = {"message" : "Event not found"};
      }
@@ -105,10 +113,41 @@ module.exports.eventsGetOne = (req, res) => {
    });
 };
 
+let _splitArray = (input) => {
+  let output;
+  if(input && input.length > 0){
+    output = input.slit(";");
+  }
+  else{
+    output= []
+  }
+  return output;
+};
+
 module.exports.eventsAddOne = (req, res) => {
-  console.log("POST new event");;
-  console.log(req.body);;
-  res
-   .status(200)
-   .json(req.body);
+  Event
+   .create({
+     title : req.body.title,
+     description : req.body.description,
+     dateAndTime : req.body.dateAndTime,
+     organisers : req.body.organisers,
+     photos : _splitArray(req.body.photos),
+     location : {
+       address : req.body.address,
+       coordinates : [parseFloat(req.body.lng), parseFloat(req.body.lat)]
+     }
+   }, (err, event) => {
+     if(err){
+       console.log("Error creating Event");
+       res
+        .status(400)
+        .json(err);
+     }
+     else{
+       console.log("Event created", event);
+       res
+        .status(201)
+        .json(event);
+     }
+   });
 }
