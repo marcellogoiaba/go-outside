@@ -131,6 +131,7 @@ module.exports.eventsAddOne = (req, res) => {
      description : req.body.description,
      dateAndTime : req.body.dateAndTime,
      organisers : req.body.organisers,
+     type: req.body.type,
      photos : _splitArray(req.body.photos),
      location : {
        address : req.body.address,
@@ -148,6 +149,59 @@ module.exports.eventsAddOne = (req, res) => {
        res
         .status(201)
         .json(event);
+     }
+   });
+}
+module.exports.eventsUpdateOne = (req, res) => {
+  let eventId = req.params.eventId;
+  console.log("Get eventId", eventId);
+
+  Event
+   .findById(eventId)
+   .select("-comments")
+   .exec((err, doc) => {
+     let response = {
+       status : 200,
+       message : doc
+     };
+     if(err){
+       console.log("Error finding Event");
+       response.status = 500;
+       response.message = err;
+     }
+     else if(!doc){
+       console.log("eventId " + id + " not found in database");
+       response.status = 404;
+       response.message = {"message" : "Event not found"};
+     }
+     if(response.status !== 200){
+       res
+        .status(response.status)
+        .json(response.message);
+     }
+     else{
+       doc.title = req.body.title;
+       doc.description = req.body.description;
+       doc.dateAndTime = req.body.dateAndTime;
+       doc.organisers = req.body.organisers;
+       doc.type = req.body.type;
+       photos = _splitArray(req.body.photos);
+       location = {
+         address : req.body.address,
+         coordinates : [parseFloat(req.body.lng), parseFloat(req.body.lat)]
+       };
+       doc.save((err, eventUpdated) => {
+         if(err){
+           res
+            .status(500)
+            .json(err);
+         }
+         else{
+           res
+            .status(204)
+            .json();
+         }
+       });
      }
    });
 }

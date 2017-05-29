@@ -11,7 +11,8 @@ router
  .post(ctrlEvents.eventsAddOne);
 router
  .route('/events/:eventId')
- .get(ctrlEvents.eventsGetOne);
+ .get(ctrlEvents.eventsGetOne)
+ .put(ctrlEvents.eventsUpdateOne);
 
 //Comment routes
 router
@@ -20,6 +21,7 @@ router
  .post(ctrlComments.commentsAddOne);
 router
  .route('/events/:eventId/comments/:commentId')
- .get(ctrlComments.commentsGetOne);
+ .get(ctrlComments.commentsGetOne)
+ .put(ctrlComments.commentsUpdateOne);
 
 module.exports = router;
