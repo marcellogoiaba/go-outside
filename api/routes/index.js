@@ -12,7 +12,8 @@ router
 router
  .route('/events/:eventId')
  .get(ctrlEvents.eventsGetOne)
- .put(ctrlEvents.eventsUpdateOne);
+ .put(ctrlEvents.eventsUpdateOne)
+ .delete(ctrlEvents.eventsDeleteOne);
 
 //Comment routes
 router
@@ -22,6 +23,7 @@ router
 router
  .route('/events/:eventId/comments/:commentId')
  .get(ctrlComments.commentsGetOne)
- .put(ctrlComments.commentsUpdateOne);
+ .put(ctrlComments.commentsUpdateOne)
+ .delete(ctrlComments.commentsDeleteOne);
 
 module.exports = router;

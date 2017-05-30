@@ -89,9 +89,9 @@ module.exports.commentsAddOne = (req, res) => {
        response.message = err;
      }
      else if(!doc){
-       console.log("eventId not found," + id);
+       console.log("eventId not found," + eventId);
        response.status = 400;
-       response.message = {"message" : "eventId not found " + id };
+       response.message = {"message" : "eventId not found " + eventId };
      }
      if(doc){
        _addComment(req, res, doc);
@@ -125,9 +125,9 @@ module.exports.commentsUpdateOne = (req, res) => {
        response.message = err;
      }
      else if(!event){
-       console.log("Event not found in database", id);
+       console.log("Event not found in database", eventId);
        response.status = 404;
-       response.message = {"message" : "Event ID not found "  + id};
+       response.message = {"message" : "Event ID not found "  + eventId};
      }
      else{
        // retrieve the commentId
@@ -135,7 +135,7 @@ module.exports.commentsUpdateOne = (req, res) => {
        // mongoose will return null if the comment does not exist
        if(!thisComment){
          response.status = 404;
-         response.message = {"message" : "Comment ID " + id + " not found"};
+         response.message = {"message" : "Comment ID " + eventId + " not found"};
        }
      }
      if(response.status !== 200){
@@ -161,3 +161,60 @@ module.exports.commentsUpdateOne = (req, res) => {
      }
    });
 };
+
+module.exports.commentsDeleteOne =  (req, res) => {
+  let eventId = req.params.eventId;
+  let commentId = req.params.commentId;
+  console.log("PUT commentId " + commentId + " for eventId " + eventId);
+
+  Event
+   .findById(eventId)
+   .select('comments')
+   .exec((err, event) => {
+     console.log("returned event", event);
+     let thisComment;
+     let response ={
+       status : 200,
+       message : {}
+     };
+     if(err){
+       console.log("Error finging event");;
+       response.status = 500;
+       response.message = err;
+     }
+     else if(!event){
+       console.log("Event not found in database", eventId);
+       response.status = 404;
+       response.message = {"message" : "Event ID not found "  + eventId};
+     }
+     else{
+       // retrieve the commentId
+       thisComment = event.comments.id(commentId);
+       // mongoose will return null if the comment does not exist
+       if(!thisComment){
+         response.status = 404;
+         response.message = {"message" : "Comment ID " + eventId + " not found"};
+       }
+     }
+     if(response.status !== 200){
+       res
+        .status(response.status)
+        .json(response.message);
+     }
+     else{
+       event.comments.id(commentId).remove();
+       event.save((err, eventUpdated) => {
+         if(err){
+           res
+            .status(500)
+            .json(err)
+         }
+         else{
+           res
+            .status(204)
+            .json();
+         }
+       });
+     }
+   });
+}

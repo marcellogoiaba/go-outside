@@ -103,7 +103,7 @@ module.exports.eventsGetOne = (req, res) => {
        response.message = err;
      }
      else if(!doc){
-       console.log("eventId " + id + " not found in database");
+       console.log("eventId " + eventId + " not found in database");
        response.status = 404;
        response.message = {"message" : "Event not found"};
      }
@@ -170,7 +170,7 @@ module.exports.eventsUpdateOne = (req, res) => {
        response.message = err;
      }
      else if(!doc){
-       console.log("eventId " + id + " not found in database");
+       console.log("eventId " + eventId + " not found in database");
        response.status = 404;
        response.message = {"message" : "Event not found"};
      }
@@ -202,6 +202,23 @@ module.exports.eventsUpdateOne = (req, res) => {
             .json();
          }
        });
+     }
+   });
+}
+
+module.exports.eventsDeleteOne = (req, res) => {
+  let eventId = req.params.eventId;
+
+  Event
+   .findByIdAndRemove(eventId)
+   .exec((err, event) => {
+     if(err){
+       res
+        .status(404)
+        .json(err);
+     }
+     else{
+       console.log("eventId " + eventId + " deleted");
      }
    });
 }
